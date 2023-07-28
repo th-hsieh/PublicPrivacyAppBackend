@@ -5,6 +5,7 @@ import org.Stasy.PublicPrivacyAppBackendHeroku.EmailValidation.Repository.UserRe
 import org.Stasy.PublicPrivacyAppBackendHeroku.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ public class UserServiceImpl2 implements UserService2 {
     @Autowired
     EmailService2 emailService2;
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+
     @Override
     public ResponseEntity<?> saveUser(User user) {
 
@@ -37,9 +42,9 @@ public class UserServiceImpl2 implements UserService2 {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                +"https://public-privacy-app-backend-8a76ad4a141e.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
+        mailMessage.setSubject("Complete Registration");
+        mailMessage.setText("To confirm your account, please click here: "
+                + baseUrl + "/confirm-account?token="+confirmationToken.getConfirmationToken());
         emailService2.sendEmail(mailMessage);
 
         System.out.println("Confirmation Token: " + confirmationToken.getConfirmationToken());
